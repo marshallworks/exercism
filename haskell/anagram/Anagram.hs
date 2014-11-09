@@ -4,13 +4,21 @@ import Data.Char (toLower)
 import Data.List (sort)
 
 anagramsFor :: String -> [String] -> [String]
-anagramsFor word possibilities = filter (isAnagram word) possibilities
-
-isAnagram :: String -> String -> Bool
-isAnagram word match
-    | wordToLower word == wordToLower match = False
-    | sortedLower word == sortedLower match = True
-    | otherwise = False
+anagramsFor word possibilities = filter (isAnagram loweredWord sortedWord) possibilities
     where
-        wordToLower str = map toLower str
-        sortedLower str = sort $ wordToLower str
+    	loweredWord = lowerCaseWord word
+    	sortedWord = sortWordChars loweredWord
+
+isAnagram :: String -> String -> String -> Bool
+isAnagram loweredWord sortedWord match = notSameWord && anagram
+    where
+        loweredMatch = lowerCaseWord match
+        sortedMatch = sortWordChars loweredMatch
+        notSameWord = loweredWord /= loweredMatch
+        anagram = sortedWord == sortedMatch
+
+lowerCaseWord :: String -> String
+lowerCaseWord = map toLower
+
+sortWordChars :: String -> String
+sortWordChars = sort
