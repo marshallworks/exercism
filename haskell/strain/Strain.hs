@@ -1,13 +1,7 @@
 module Strain (keep, discard) where
 
 keep :: (a -> Bool) -> [a] -> [a]
-keep _ [] = []
-keep f (x:xs)
-    | f x       = x : keep f xs
-    | otherwise = keep f xs
+keep f = foldr (\x xs -> if f x then x : xs else xs) []
 
 discard :: (a -> Bool) -> [a] -> [a]
-discard _ [] = []
-discard f (x:xs)
-    | not $ f x = x : discard f xs
-    | otherwise = discard f xs
+discard f xs = keep (not . f) xs
