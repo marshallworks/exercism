@@ -22,11 +22,11 @@ ageOn planet secs =
         Uranus  -> secs/secsInYearUranus
         Neptune -> secs/secsInYearNeptune
         where
-            secsInYearMercury = 31557600 * 0.2408467
-            secsInYearVenus = 31557600 * 0.61519726
             secsInYearEarth = 31557600
-            secsInYearMars = 31557600 * 1.8808158
-            secsInYearJupiter = 31557600 * 11.862615
-            secsInYearSaturn = 31557600 * 29.447498
-            secsInYearUranus = 31557600 * 84.016846
-            secsInYearNeptune = 31557600 * 164.79132
+            secsInYearMercury = secsInYearEarth * 0.2408467
+            secsInYearVenus = secsInYearEarth * 0.61519726
+            secsInYearMars = secsInYearEarth * 1.8808158
+            secsInYearJupiter = secsInYearEarth * 11.862615
+            secsInYearSaturn = secsInYearEarth * 29.447498
+            secsInYearUranus = secsInYearEarth * 84.016846
+            secsInYearNeptune = secsInYearEarth * 164.79132
