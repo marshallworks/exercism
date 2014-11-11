@@ -1,22 +1,31 @@
 module DNA (count, nucleotideCounts) where
 
-import Data.Map (Map, fromList)
+import qualified Data.Map.Strict as Map
 
 count :: Char -> String -> Int
 count nucleotide strand =
-    case nucleotide of
-        'A' -> instances
-        'T' -> instances
-        'C' -> instances
-        'G' -> instances
-        _   -> error $ "invalid nucleotide " ++ show nucleotide
-        where
-            instances = length $ filter (== nucleotide) strand
-
-nucleotideCounts :: String -> Map Char Int
-nucleotideCounts strand = fromList [adenineCount, thymineCount, cytosineCount, guanineCount]
+    case getCount of
+        -1 -> error $ "invalid nucleotide " ++ show nucleotide
+        otherwise -> getCount
     where
-        adenineCount  = ('A', count 'A' strand)
-        thymineCount  = ('T', count 'T' strand)
-        cytosineCount = ('C', count 'C' strand)
-        guanineCount  = ('G', count 'G' strand)
+        getCount = fromCount $ Map.lookup nucleotide $ nucleotideCounts strand
+
+nucleotideCounts :: String -> Map.Map Char Int
+nucleotideCounts = foldr collectNucleotides initial
+    where
+        initial = Map.fromList [('A', 0),('T', 0),('C', 0),('G', 0)]
+
+collectNucleotides :: Char -> Map.Map Char Int -> Map.Map Char Int
+collectNucleotides nucleotide counts =
+    case nucleotide of
+        'A' -> Map.update addNucleotide nucleotide counts
+        'T' -> Map.update addNucleotide nucleotide counts
+        'C' -> Map.update addNucleotide nucleotide counts
+        'G' -> Map.update addNucleotide nucleotide counts
+        _   -> error $ "invalid nucleotide " ++ show nucleotide
+    where
+        addNucleotide counter = Just (counter + 1)
+
+fromCount :: Maybe Int -> Int
+fromCount Nothing = -1
+fromCount (Just x) = x
