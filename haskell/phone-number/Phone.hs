@@ -1,6 +1,7 @@
 module Phone (areaCode, number, prettyPrint) where
 
 import Data.Char (isDigit)
+import Data.List.Split (splitPlaces)
 
 number :: String -> String
 number str =
@@ -16,8 +17,7 @@ areaCode :: String -> String
 areaCode str = take 3 $ number str
 
 prettyPrint :: String -> String
-prettyPrint str = "("++ac++") "++three++"-"++four
+prettyPrint str = "("++comp !! 0++") "++comp !! 1++"-"++comp !! 2
     where
         num = number str
-        (ac, rest) = splitAt 3 num
-        (three, four) = splitAt 3 rest
+        comp = splitPlaces [3,3,4::Int] num
