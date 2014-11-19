@@ -17,7 +17,7 @@ areaCode :: String -> String
 areaCode str = take 3 $ number str
 
 prettyPrint :: String -> String
-prettyPrint str = "("++comp !! 0++") "++comp !! 1++"-"++comp !! 2
+prettyPrint str = "("++a++") "++b++"-"++c
     where
         num = number str
-        comp = splitPlaces [3,3,4::Int] num
+        [a, b, c] = splitPlaces [3,3,4::Int] num
