@@ -1,34 +1,19 @@
 module School where
 
 import Data.List (sort)
+import qualified Data.Map as DMS (Map, toList, fromList, insertWith, findWithDefault)
 
-type Student = String
-type Students = [Student]
-type Grade = Int
-type Grades = (Grade, Students)
-type School = [Grades]
+type School = DMS.Map Int [String]
 
 empty :: School
-empty = []
+empty = DMS.fromList []
 
-add :: Grade -> Student -> School -> School
-add gradeNumber studentName school
-    | schoolHasGrade  = map studentToGrade school
-    | otherwise       = (gradeNumber, [studentName]) : school
-    where
-        schoolHasGrade = any (\grades -> fst grades == gradeNumber) school
-        studentToGrade (gradeInSchool, studentsInGrade)
-            | gradeInSchool == gradeNumber = (gradeInSchool, studentName : studentsInGrade)
-            | otherwise                    = (gradeInSchool, studentsInGrade)
+add :: Int -> String -> School -> School
+add gNum sName = DMS.insertWith (++) gNum [sName]
 
-sorted :: School -> School
-sorted school = sort $ map sortedNames school
-    where
-        sortedNames (gradeNumber, students) = (gradeNumber, sort students)
+sorted :: School -> [(Int, [String])]
+sorted school = sort $ map sortedNamez (DMS.toList school)
+    where sortedNamez (gNum, sNames) = (gNum, sort sNames)
 
-grade :: Grade -> School -> Students
-grade gradeNumber = foldr buildStudentList []
-    where
-        buildStudentList (gradeInSchool, studentsInGrade) studentList
-            | gradeNumber == gradeInSchool = studentsInGrade ++ studentList
-            | otherwise                    = studentList
+grade :: Int -> School -> [String]
+grade = DMS.findWithDefault []
