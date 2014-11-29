@@ -20,10 +20,13 @@ fromList = foldr new nil
 
 toList :: Element a -> [a]
 toList ele = reverse $ gatherList [] ele
+    where
+        gatherList acc Nil = acc
+        gatherList acc oldLL = gatherList (datum oldLL : acc) (next oldLL)
 
 reverseLinkedList :: Element a -> Element a
-reverseLinkedList ele = fromList $ gatherList [] ele
-
-gatherList :: [a] -> Element a -> [a]
-gatherList acc Nil = acc
-gatherList acc ele = gatherList (datum ele : acc) (next ele)
+reverseLinkedList Nil = Nil
+reverseLinkedList ele = gatherReversal (datum ele) (next ele) nil
+    where
+        gatherReversal val Nil newLL   = new val newLL
+        gatherReversal val oldLL newLL = gatherReversal (datum oldLL) (next oldLL) (new val newLL)
