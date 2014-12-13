@@ -1,19 +1,19 @@
 module School where
 
 import Data.List (sort)
-import qualified Data.Map as DMS (Map, toList, fromList, insertWith, findWithDefault)
+import qualified Data.IntMap as DIM
 
-type School = DMS.Map Int [String]
+type School = DIM.IntMap [String]
 
 empty :: School
-empty = DMS.fromList []
+empty = DIM.fromList []
 
 add :: Int -> String -> School -> School
-add gNum sName = DMS.insertWith (++) gNum [sName]
+add gNum sName = DIM.insertWith (++) gNum [sName]
 
 sorted :: School -> [(Int, [String])]
-sorted school = sort $ map sortedNamez (DMS.toList school)
+sorted school = sort $ map sortedNamez (DIM.toList school)
     where sortedNamez (gNum, sNames) = (gNum, sort sNames)
 
 grade :: Int -> School -> [String]
-grade = DMS.findWithDefault []
+grade = DIM.findWithDefault []
