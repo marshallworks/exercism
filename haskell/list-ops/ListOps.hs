@@ -15,47 +15,28 @@ import Prelude hiding
 foldl' :: (b -> a -> b) -> b -> [a] -> b
 foldl' _ start [] = start
 foldl' f start (x:xs) = start' `seq` foldl' f start' xs
-    where
-        start' = f start x
+    where start' = f start x
 
 foldr :: (a -> b -> b) -> b -> [a] -> b
-foldr func start list = foldElements func start (reverse list)
+foldr func start = foldElements
     where
-        foldElements _ acc [] = acc
-        foldElements f acc (x:xs) = foldElements f (f x acc) xs
+        foldElements [] = start
+        foldElements (x:xs) = x `func` foldElements xs
 
 length :: [a] -> Int
-length = countElements 0
-    where
-        countElements acc []   = acc
-        countElements acc list = countElements (acc + 1) (tail list)
+length = foldl' (\ count _ -> count + 1) 0
 
 reverse :: [a] -> [a]
-reverse = reverseElements []
-    where
-        reverseElements acc [] = acc
-        reverseElements acc (x:xs) = reverseElements (x : acc) xs
+reverse = foldl' (flip (:)) []
 
 map :: (a -> b) -> [a] -> [b]
-map = applyElements []
-    where
-        applyElements acc _ [] = reverse acc
-        applyElements acc f (x:xs) = applyElements ((f x :) acc) f xs
+map f = foldr (\x xs -> f x : xs) []
 
 filter :: (a -> Bool) -> [a] -> [a]
-filter = filterElements []
-    where
-        filterElements acc _ [] = reverse acc
-        filterElements acc f (x:xs) = if f x then filterElements (x : acc) f xs else filterElements acc f xs
+filter f = foldr (\x xs -> if f x then x : xs else xs) []
 
 (++) :: [a] -> [a] -> [a]
-list ++ ys = combineElements ys (reverse list)
-    where
-        combineElements acc [] = acc
-        combineElements acc (x:xs) = combineElements (x : acc) xs
+list ++ ys = foldl' (flip (:)) ys (reverse list)
 
 concat :: [[a]] -> [a]
-concat list = combineLists [] (reverse list)
-    where
-        combineLists acc [] = acc
-        combineLists acc (x:xs) = combineLists (x ++ acc) xs
+concat list = foldl' (flip (++)) [] (reverse list)
