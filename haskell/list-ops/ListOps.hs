@@ -36,7 +36,7 @@ filter :: (a -> Bool) -> [a] -> [a]
 filter f = foldr (\x xs -> if f x then x : xs else xs) []
 
 (++) :: [a] -> [a] -> [a]
-list ++ ys = foldl' (flip (:)) ys (reverse list)
+first ++ second = foldr (:) second first
 
 concat :: [[a]] -> [a]
-concat list = foldl' (flip (++)) [] (reverse list)
+concat = foldr (++) []
